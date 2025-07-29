@@ -22,17 +22,10 @@ jobs:
         
       - name: Replace secrets in config.json
         env:
-          QDINFO: ${{ secrets.QDINFO }}  # 从Secrets读取值
-          SDKSIGN: ${{ secrets.SDKSIGN }}    # 可扩展其他变量
-          YWGUID: ${{ secrets.YWGUID }} 
-          YWKEY: ${{ secrets.YWKEY }} 
+          CONFIG_JSON: ${{ secrets.CONFIG_JSON }}
         run: |
-          # 使用sed命令替换config.json中的占位符
-          sed -i "s|\"QdInfo\": \".*\"|\"QdInfo\": \"$QDINFO\"|g" config.json
-          sed -i "s|\"SdkSign\": \".*\"|\"SdkSign\": \"$SDKSIGN\"|g" config.json
-          sed -i "s|\"YwKey\": \".*\"|\"YwKey\": \"$YWGUID\"|g" config.json
-          sed -i "s|\"YwGuid\": \".*\"|\"YwGuid\": \"$YWKEY\"|g" config.json
+          echo "$CONFIG_JSON" > config.json
           cat config.json # 可选：验证替换结果（注意：正式环境建议移除以避免敏感信息泄露）
   
-      - name: Run Go application
-        run: ./myapp
+      #- name: Run Go application
+       # run: ./myapp
