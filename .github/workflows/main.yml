@@ -1,0 +1,34 @@
+name: Run QDAPI
+on: [push] # 触发条件：代码推送时自动运行
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 步骤1：检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 步骤2：设置 Go 环境
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.24' # 指定Go版本，按需修改
+
+      # 步骤3：用Secrets替换config.json中的变量
+      - name: Replace secrets in config.json
+        env:
+          QDINFO: ${{ secrets.QDINFO }}  # 从Secrets读取值
+          SDKSIGN: ${{ secrets.SDKSIGN }}    # 可扩展其他变量
+          YWGUID: ${{ secrets.YWGUID }} 
+          YWKEY: ${{ secrets.YWKEY }} 
+        run: |
+          # 使用sed命令替换config.json中的占位符
+          sed -i "s|\"QdInfo\": \".*\"|\"QdInfo\": \"$QDINFO\"|g" config.json
+          sed -i "s|\"SdkSign\": \".*\"|\"SdkSign\": \"$SDKSIGN\"|g" config.json
+          sed -i "s|\"YwKey\": \".*\"|\"YwKey\": \"$YWGUID\"|g" config.json
+          sed -i "s|\"YwGuid\": \".*\"|\"YwGuid\": \"$YWKEY\"|g" config.json
+          cat config.json # 可选：验证替换结果（注意：正式环境建议移除以避免敏感信息泄露）
+
+      # 步骤4：运行Go项目
+      - name: Run application
+        run: go run cmd/main.go
