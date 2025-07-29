@@ -2,7 +2,7 @@ name: QDCheckIn
 
 on:
   schedule:
-    - cron: '0 16 * * *'  # 每天凌晨 12:00 UTC 运行
+    - cron: '0 11 * * *'  # 每天凌晨 12:00 UTC 运行
   workflow_dispatch:  # 手动触发
 
 jobs:
@@ -19,6 +19,20 @@ jobs:
 
       - name: Build Go project
         run: go build -o myapp ./cmd
-
+        
+      - name: Replace secrets in config.json
+        env:
+          QDINFO: ${{ secrets.QDINFO }}  # 从Secrets读取值
+          SDKSIGN: ${{ secrets.SDKSIGN }}    # 可扩展其他变量
+          YWGUID: ${{ secrets.YWGUID }} 
+          YWKEY: ${{ secrets.YWKEY }} 
+        run: |
+          # 使用sed命令替换config.json中的占位符
+          sed -i "s|\"QdInfo\": \".*\"|\"QdInfo\": \"$QDINFO\"|g" config.json
+          sed -i "s|\"SdkSign\": \".*\"|\"SdkSign\": \"$SDKSIGN\"|g" config.json
+          sed -i "s|\"YwKey\": \".*\"|\"YwKey\": \"$YWGUID\"|g" config.json
+          sed -i "s|\"YwGuid\": \".*\"|\"YwGuid\": \"$YWKEY\"|g" config.json
+          cat config.json # 可选：验证替换结果（注意：正式环境建议移除以避免敏感信息泄露）
+  
       - name: Run Go application
         run: ./myapp
