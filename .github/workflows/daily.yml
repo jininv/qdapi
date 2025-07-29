@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v4
         with:
           go-version: '1.23'  # 你可以根据需要调整Go版本
 
@@ -25,7 +25,7 @@ jobs:
           CONFIG_JSON: ${{ secrets.CONFIG_JSON }}
         run: |
           echo "$CONFIG_JSON" > config.json
-          cat config.json # 可选：验证替换结果（注意：正式环境建议移除以避免敏感信息泄露）
+          cat config.json
   
-      #- name: Run Go application
-       # run: ./myapp
+      - name: Run Go application
+        run: ./myapp
