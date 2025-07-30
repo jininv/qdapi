@@ -8,7 +8,7 @@ on:
   workflow_dispatch:  # 手动触发
 
 jobs:
-  deploy:
+  build-and-run:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -28,5 +28,5 @@ jobs:
         run: |
           echo "$CONFIG_JSON" > config.json
 
-      #- name: Run Go application
-      #  run: ./myapp
+      - name: Run Go application
+        run: ./myapp
