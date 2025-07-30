@@ -8,7 +8,7 @@ on:
   workflow_dispatch:  # 手动触发
 
 jobs:
-  build-and-run:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -17,7 +17,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.23'  # 你可以根据需要调整Go版本
+          go-version: '1.23'
 
       - name: Build Go project
         run: go build -o myapp ./cmd
@@ -27,7 +27,6 @@ jobs:
           CONFIG_JSON: ${{ secrets.CONFIG_JSON }}
         run: |
           echo "$CONFIG_JSON" > config.json
-          cat config.json
-  
-      - name: Run Go application
-        run: ./myapp
+
+      #- name: Run Go application
+      #  run: ./myapp
