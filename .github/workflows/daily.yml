@@ -2,8 +2,8 @@ name: QDCheckIn
 
 on:
   schedule:
-    - cron: '25 3 * * *'  # 每天凌晨 12:00 UTC 运行
-  #workflow_dispatch:  # 手动触发
+    - cron: '0 4 * * *'  # 每天凌晨 4:00 UTC 运行
+  workflow_dispatch:  # 手动触发
 
 jobs:
   build-and-run:
