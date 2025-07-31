@@ -46,7 +46,7 @@ type QiDianApiConfig struct {
 type BaseResp struct {
 	Data    interface{} `json:"Data"`
 	Message string      `json:"Message"`
-	Result  int         `json:"Result"`
+	Result  interface{} `json:"Result"`
 }
 type HeartBeatResp struct {
 	Code  int           `json:"code"`
@@ -56,7 +56,15 @@ type HeartBeatResp struct {
 }
 
 func (r *BaseResp) IsSuccess() bool {
-	return r.Result == 0
+	// 处理Result可能是字符串或整数的情况
+	switch v := r.Result.(type) {
+	case int:
+		return v == 0
+	case string:
+		return v == "0"
+	default:
+		return false
+	}
 }
 
 type CheckinResp struct {
